@@ -1,0 +1,6 @@
+__pycache__/
+.pytest_cache/
+.scannerwork
+.coverage
+coverage.xml
+sonar-project.properties
