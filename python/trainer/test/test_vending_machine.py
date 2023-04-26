@@ -27,3 +27,13 @@ class TestVendingMachine:
     assert charge == 0
     assert stock == 0
 
+  def test_story_cannot_buy_water(self):
+    vending_machine = VendingMachine()
+    vending_machine.stock(1)
+    actual = vending_machine.buy('water')
+    charge = vending_machine.charge()
+    stock = vending_machine.getStock()
+    assert actual == None
+    assert charge == 0
+    assert stock == 0
+
