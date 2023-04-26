@@ -1,81 +1,32 @@
-class DrinkBox:
-
-  def __init__(self, stock):
-    self.stock = stock
-  def get_stock(self):
-    pass
-
-  def take(self):
-    self.stock -= 1
-
-  def add(self, numnber_of_drink):
-    self.stock = numnber_of_drink
-
-
-class MoneyBox:
-  def __init__(self, value):
-    self.value = value
-
-  def take(self, param):
-    self.value -= param
-
-
-class Drink:
-  def __init__(self, name):
-    self.name = name
-
-  def price(self):
-    if (self.name == 'cola'):
-      return 120
-    if (self.name == 'water'):
-      return 100
-
-
-class VendingMachine:
-  def __init__(self):
-    self.drink_box = DrinkBox(0)
-    self.money_box = MoneyBox(0)
-
-  def stock(self, numnber_of_drink):
-    self.drink_box.add(numnber_of_drink)
-
-  def input(self, money):
-    self.money_box.value += money
-
-  def buy(self, drink_name):
-    self.drink_box.take()
-    drink = Drink(drink_name)
-    self.money_box.take(drink.price())
-    return drink_name
-
-  def charge(self):
-    return self.money_box.value
-
-  def getStock(self):
-    return self.drink_box.stock
-
-
+from teamE.src.vending_machine import VendingMachine
 class TestVendingMachine:
-  def test_story(self):
     vending_machine = VendingMachine()
-    vending_machine.stock(1)
-    vending_machine.input(100)
-    actual = vending_machine.buy('water')
-    charge = vending_machine.charge()
-    stock = vending_machine.getStock()
-    assert actual == 'water'
-    assert charge == 0
-    assert stock == 0
+    def test_put_money(self):
+      self.vending_machine.amount = 0
+      self.vending_machine.put_money(10)
+      assert self.vending_machine.amount == 10
+      assert self.vending_machine.put_money(1) == False
+      assert self.vending_machine.put_money(5) == False
+      assert self.vending_machine.put_money(5000) == False
+      assert self.vending_machine.put_money(10000) == False
 
-  def test_story_cola(self):
-    vending_machine = VendingMachine()
-    vending_machine.stock(1)
-    vending_machine.input(100)
-    vending_machine.input(10)
-    vending_machine.input(10)
-    actual = vending_machine.buy('cola')
-    charge = vending_machine.charge()
-    stock = vending_machine.getStock()
-    assert actual == 'cola'
-    assert charge == 0
-    assert stock == 0
+    def test_get_money(self):
+      self.vending_machine.amount = 0
+      self.vending_machine.put_money(10)
+      self.vending_machine.put_money(100)
+      self.vending_machine.put_money(1000)
+      assert self.vending_machine.get_amount() == 1110
+
+    def test_is_money_usable(self):
+      assert self.vending_machine.is_money_usable(1) == False
+      assert self.vending_machine.is_money_usable(5) == False
+      assert self.vending_machine.is_money_usable(5000) == False
+      assert self.vending_machine.is_money_usable(10000) == False
+      assert self.vending_machine.is_money_usable(10) == True
+      assert self.vending_machine.is_money_usable(100) == True
+      assert self.vending_machine.is_money_usable(1000) == True
+
+    def test_buy_drink(self):
+      self.vending_machine.amount = 1000
+      assert self.vending_machine.buy_drink('water') == 900
+      assert self.vending_machine.buy_drink('cola') == 780
