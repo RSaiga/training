@@ -20,6 +20,17 @@ class MoneyBox:
     self.value -= param
 
 
+class Drink:
+  def __init__(self, name):
+    self.name = name
+
+  def price(self):
+    if (self.name == 'cola'):
+      return 120
+    if (self.name == 'water'):
+      return 100
+
+
 class VendingMachine:
   def __init__(self):
     self.drink_box = DrinkBox(0)
@@ -31,16 +42,11 @@ class VendingMachine:
   def input(self, money):
     self.money_box.value += money
 
-  def buy(self, param):
+  def buy(self, drink_name):
     self.drink_box.take()
-    if (param == 'cola'):
-      self.money_box.take(120)
-      return 'cola'
-    self.money_box.take(100)
-    return 'water'
-
-  def take(self):
-    self.money_box.take(100)
+    drink = Drink(drink_name)
+    self.money_box.take(drink.price())
+    return drink_name
 
   def charge(self):
     return self.money_box.value
