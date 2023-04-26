@@ -12,24 +12,35 @@ class DrinkBox:
     self.stock = numnber_of_drink
 
 
+class MoneyBox:
+  def __init__(self, value):
+    self.value = value
+
+  def take(self, param):
+    self.value -= param
+
+
 class VendingMachine:
   def __init__(self):
-    self._amount = 0
     self.drink_box = DrinkBox(0)
+    self.money_box = MoneyBox(0)
 
   def stock(self, numnber_of_drink):
     self.drink_box.add(numnber_of_drink)
 
   def input(self, money):
-    self._amount = money
+    self.money_box.value = money
 
   def buy(self, param):
     self.drink_box.take()
-    self._amount -= 100
+    self.money_box.take(100)
     return 'water'
 
+  def take(self):
+    self.money_box.take(100)
+
   def charge(self):
-    return self._amount
+    return self.money_box.value
 
   def getStock(self):
     return self.drink_box.stock
