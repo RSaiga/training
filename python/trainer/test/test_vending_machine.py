@@ -29,10 +29,13 @@ class VendingMachine:
     self.drink_box.add(numnber_of_drink)
 
   def input(self, money):
-    self.money_box.value = money
+    self.money_box.value += money
 
   def buy(self, param):
     self.drink_box.take()
+    if (param == 'cola'):
+      self.money_box.take(120)
+      return 'cola'
     self.money_box.take(100)
     return 'water'
 
