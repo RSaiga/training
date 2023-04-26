@@ -1,19 +1,14 @@
-import pytest
-
 from trainer.src.vending_machine import VendingMachine
 class TestVendingMachine:
     vending_machine = VendingMachine()
     def test_put_money(self):
-      # given
       self.vending_machine.amount = 0
-      # when
       self.vending_machine.put_money(10)
-      # then
       assert self.vending_machine.amount == 10
-
-    @pytest.mark.parametrize('money', [1, 5, 5000, 10000], ids=['1円','5円','5000円','10000円'])
-    def test_invalid_money(self, money):
-      assert self.vending_machine.put_money(money) == False
+      assert self.vending_machine.put_money(1) == False
+      assert self.vending_machine.put_money(5) == False
+      assert self.vending_machine.put_money(5000) == False
+      assert self.vending_machine.put_money(10000) == False
 
     def test_get_money(self):
       self.vending_machine.amount = 0
