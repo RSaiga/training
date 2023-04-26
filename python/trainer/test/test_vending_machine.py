@@ -57,3 +57,16 @@ class TestVendingMachine:
     assert actual == 'water'
     assert charge == 0
     assert stock == 0
+
+  def test_story_cola(self):
+    vending_machine = VendingMachine()
+    vending_machine.stock(1)
+    vending_machine.input(100)
+    vending_machine.input(10)
+    vending_machine.input(10)
+    actual = vending_machine.buy('cola')
+    charge = vending_machine.charge()
+    stock = vending_machine.getStock()
+    assert actual == 'cola'
+    assert charge == 0
+    assert stock == 0
