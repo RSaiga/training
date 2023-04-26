@@ -2,9 +2,14 @@ from teamE.src.vending_machine import VendingMachine
 class TestVendingMachine:
     vending_machine = VendingMachine()
     def test_put_money(self):
+      # given
       self.vending_machine.amount = 0
+      # when
       self.vending_machine.put_money(10)
+      # then
       assert self.vending_machine.amount == 10
+
+    def test_invalid_money(self):
       assert self.vending_machine.put_money(1) == False
       assert self.vending_machine.put_money(5) == False
       assert self.vending_machine.put_money(5000) == False
