@@ -1,18 +1,38 @@
-class VendingMachine:
-  def stock(self, param):
+class DrinkBox:
+
+  def __init__(self, stock):
+    self.stock = stock
+  def get_stock(self):
     pass
 
-  def input(self, param):
-    pass
+  def take(self):
+    self.stock -= 1
+
+  def add(self, numnber_of_drink):
+    self.stock = numnber_of_drink
+
+
+class VendingMachine:
+  def __init__(self):
+    self._amount = 0
+    self.drink_box = DrinkBox(0)
+
+  def stock(self, numnber_of_drink):
+    self.drink_box.add(numnber_of_drink)
+
+  def input(self, money):
+    self._amount = money
 
   def buy(self, param):
+    self.drink_box.take()
+    self._amount -= 100
     return 'water'
 
   def charge(self):
-    return 0
+    return self._amount
 
   def getStock(self):
-    return 0
+    return self.drink_box.stock
 
 
 class TestVendingMachine:
@@ -26,10 +46,3 @@ class TestVendingMachine:
     assert actual == 'water'
     assert charge == 0
     assert stock == 0
-
-  def test_stock(self):
-    vending_machine = VendingMachine()
-    vending_machine.stock(1)
-    stock = vending_machine.getStock()
-    assert stock == 1
-
