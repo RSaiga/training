@@ -1,11 +1,15 @@
+import pytest
+
 from teamD.src.vending_machine import VendingMachine
 
 class TestVendingMachine:
+  def setup_method(self):
+    self.vending_machine = VendingMachine()
 
   def test_お金を入金できること(self):
     # 入金できること
     vending_machine = VendingMachine()
-    assert vending_machine.show_amount() == 0
+    assert self.vending_machine.show_amount() == 0
     vending_machine.add_amount(100)
     # 総額を参照できること
     assert vending_machine.show_amount() == 100
@@ -26,23 +30,41 @@ class TestVendingMachine:
 
   def test_購入(self):
     # お釣りが出ること
-    vending_machine = VendingMachine()
     # 入金(100)
-    vending_machine.add_amount(50)
-    vending_machine.buy(vending_machine.WATER)
-    assert vending_machine.show_amount() == 50
-    vending_machine.add_amount(50)
-    vending_machine.buy(vending_machine.WATER)
-    assert vending_machine.show_amount() == 0
-    vending_machine.add_amount(100)
-    vending_machine.buy(vending_machine.COLA)
-    assert vending_machine.show_amount() == 100
-    vending_machine.add_amount(100)
-    vending_machine.buy(vending_machine.COLA)
-    assert vending_machine.show_amount() == 80
+    self.vending_machine.add_amount(50)
+    self.vending_machine.buy(1)
+    assert self.vending_machine.show_amount() == 50
+    self.vending_machine.add_amount(50)
+    self.vending_machine.buy(1)
+    assert self.vending_machine.show_amount() == 0
+    self.vending_machine.add_amount(100)
+    self.vending_machine.buy(2)
+    assert self.vending_machine.show_amount() == 100
+    self.vending_machine.add_amount(100)
+    self.vending_machine.buy(2)
+    assert self.vending_machine.show_amount() == 80
 
   def test_お釣り(self):
     # お釣りが出ること
-    vending_machine = VendingMachine()
-    assert vending_machine.change() == 0
+    assert self.vending_machine.change() == 0
 
+  @pytest.mark.parametrize('amount', [10, 50, 100, 500, 1000])
+  def test_check_valid_deposit(self, amount):
+    assert self.vending_machine.check_valid_deposit(amount) == True
+
+  @pytest.mark.parametrize('amount', [1, 5, 5000, 10000])
+  def test_check_invalid_deposit(self, amount):
+    assert self.vending_machine.check_valid_deposit(amount) == False
+
+  def test_在庫補充(self):
+    type_mizu = 1
+    assert self.vending_machine.show_stock(type_mizu) == 0
+    hojyu = 1
+    self.vending_machine.add_stock(type_mizu, hojyu)
+    assert self.vending_machine.show_stock(type_mizu) == 1
+
+    type_cola = 2
+    assert self.vending_machine.show_stock(type_cola) == 0
+    hojyu = 2
+    self.vending_machine.add_stock(type_cola, hojyu)
+    assert self.vending_machine.show_stock(type_cola) == 2
