@@ -2,6 +2,15 @@
 class Vending():
     money = 0
     menuList = ['お金を入れる', '購入する', '終了する']
+    # menuList2 = [{
+    #         'title': 'お金を入れる'
+    #         'subMenu'},
+    #         {'title'：'購入する'
+    #         'subMenu':''},
+    #         {'終了する'}]
+    drinkList = {
+        'water': {'price': 100, 'stock': 5}
+    }
 
     def show_menu(self):
         message = ''
@@ -11,10 +20,20 @@ class Vending():
         return message
 
     def validate_menu_input(self, menu_input):
-        if not menu_input.isnumeric():
+        if not type(menu_input) is int:
             return False
-        menu_input = int(menu_input)
+        if (menu_input <= 0) or (len(self.menuList) < menu_input):
+            return False
+
         return True
 
     def select_menu(self, menu_input):
-        self.validate_menu_input(menu_input)
+        valid = self.validate_menu_input(menu_input)
+        if not valid:
+            return {
+                'status': 'error',
+                'message': '有効な値を選択してください'
+            }
+
+
+
