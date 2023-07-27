@@ -1,24 +1,66 @@
-class Drink {
-  cola: number = 120;
-  select(item: string, total: number) {
-    if (item == "Cola" && this.cola <= total) {
-      return "Cola";
+class VendingMachine {
+  mn: Money = new Money;
+  dk: Drink = new Drink;
+  // お金投入
+  put(money: any) {
+    try {
+      // 1、5、5000、10000円投入不可
+      if (!this.mn.check(money)) {
+        throw new Error("1、5、5000、10000円は投入できません")
+      }
+      this.mn.total += money;
+    } catch (ex: any) {
+      if (ex.message == "1、5、5000、10000円は投入できません") {
+        throw new Error("1、5、5000、10000円は投入できません")
+      } else {
+        throw new Error("硬貨以外は投入できません")
+      }
     }
   }
+  // お釣り返却
+  change(): number {
+    return this.mn.total;
+  }
+  // 在庫入庫
+  store(item: string) {
+
+  }
+  // 購入
+  purchase(item: string) {
+    if (item == "Cola" && this.dk.COLA <= this.mn.total) {
+      this.mn.total -= this.dk.COLA;
+      return "Cola";
+    }
+    if (item == "Water" && this.dk.WATER <= this.mn.total) {
+      this.mn.total -= this.dk.WATER;
+      return "Water";
+    }
+    return false;
+  }
+
+}
+class Drink {
+  COLA: number = 120;
+  WATER: number = 100;
 }
 class Money {
   total:number = 0;
-  insert(digit: number) {
+  store(digit: number) {
     if (!this.check(digit)) {
       return 0;
     }
     this.total += digit;
     return this.total;
   }
+  // checkIfCoin(digit: any) {
+  //   if (!Number(digit)) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
   check(digit: any) {
-    if (!Number(digit)) {
-      return false;
-    } else if (digit === 1) {
+    if (digit === 1) {
       return false;
     } else if(digit === 5) {
       return false;
@@ -34,21 +76,22 @@ class Money {
 
 describe('SampleTest', () => {
   it('InsertMoney100', () => {
-    const total = new Money().insert(100);
+    const total = new Money().store(100);
     expect(total).toBe(100)
   })
   it('InsertMoney50', () => {
-    const total = new Money().insert(50);
+    const total = new Money().store(50);
     expect(total).toBe(50)
   })
   it('InsertMoney10', () => {
-    const total = new Money().insert(10);
+    const total = new Money().store(10);
     expect(total).toBe(10)
   })
   it('InsertMoneySum', () => {
-    let total = new Money().insert(10);
-    total = new Money().insert(50);
-    total = new Money().insert(100);
+    const mn = new Money();
+    mn.store(10);
+    mn.store(50);
+    const total = mn.store(100);
     expect(total).toBe(160)
   })
   it('InsertMoney1', () => {
@@ -64,47 +107,76 @@ describe('SampleTest', () => {
     expect(total).toBe(false)
   })
   it('InsertMoney10000', () => {
-    const total = new Money().check(10000);
-    expect(total).toBe(false)
+    let vm = new VendingMachine();
+    try {
+      vm.put(10000);
+    } catch(ex: any) {
+      expect(ex.message).toBe("1、5、5000、10000円は投入できません")
+    }
   })
+  // 硬貨投入 - 硬貨チェック
   it('InsertMoney', () => {
-    const total = new Money().check("abc");
-    expect(total).toBe(false)
+    let vm = new VendingMachine();
+    try {
+      vm.put("abc");
+    } catch(ex: any) {
+      expect(ex.message).toBe("硬貨以外は投入できません")
+    }
   })
   it('DrinkSelectColaLow', () => {
-    let total = new Money().insert(100);
-    const selected = new Drink().select("Cola", total);
-    expect(selected).toBe(false)
+    let vm = new VendingMachine();
+    vm.put(100);
+    const drink = vm.purchase("Cola");
+    expect(drink).toBe(false)
   })
   it('DrinkSelectColaJust', () => {
-    const total = new Money().insert(120);
-    const selected = new Drink().select("Cola", total);
-    expect(selected).toBe("Cola")
+    let vm = new VendingMachine();
+    vm.put(120);
+    const drink = vm.purchase("Cola");
+    expect(drink).toBe("Cola")
   })
   it('DrinkSelectColaOver', () => {
-    const total = new Money().insert(180);
-    const selected = new Drink().select("Cola", total);
-    expect(selected).toBe("Cola")
+    let vm = new VendingMachine();
+    vm.put(180);
+    const drink = vm.purchase("Cola");
+    expect(drink).toBe("Cola")
   })
   it('DrinkSelectWaterLow', () => {
-    const digit = new Drink().select("Water", 50);
-    expect(digit).toBe(false)
+    let vm = new VendingMachine();
+    vm.put(50);
+    const drink = vm.purchase("Water");
+    expect(drink).toBe(false)
   })
   it('DrinkSelectWaterJust', () => {
-    const digit = new Drink().select("Water", 100);
-    expect(digit).toBe("Water")
+    let vm = new VendingMachine();
+    vm.put(100);
+    const drink = vm.purchase("Water");
+    expect(drink).toBe("Water")
   })
   it('DrinkSelectWaterOver', () => {
-    const digit = new Drink().select("Water", 150);
-    expect(digit).toBe("Water")
+    let vm = new VendingMachine();
+    vm.put(50);
+    vm.put(100);
+    const drink = vm.purchase("Water");
+    expect(drink).toBe("Water")
   })
-  //お釣りが出る
-  it('ChangeMoney', () => {
-    let ms = new Money();
-    ms.insert(10);
-    ms.insert(50);
-    ms.insert(100);
-    const total = ms.total;
+  //投入金額の総計
+  it('MoneySum', () => {
+    let vm = new VendingMachine();
+    vm.put(10);
+    vm.put(50);
+    vm.put(100);
+    const total = vm.mn.total;
     expect(total).toBe(160)
+  })
+  //お釣り
+  it('ChangeMoney', () => {
+    let vm = new VendingMachine();
+    vm.put(10);
+    vm.put(50);
+    vm.put(100);
+    vm.purchase("Water");
+    const total = vm.mn.total;
+    expect(total).toBe(60);
   })
 })

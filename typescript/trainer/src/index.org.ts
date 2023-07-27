@@ -18,39 +18,9 @@
 // }
 
 export type Money = 1 | 5 | 10 | 50 | 100 | 500 | 1000 | 5000 | 10000
-
-enum Product {
+export enum Product {
   Water,
-  Cola,
-}
-
-namespace Product {
-  export function getPrice(p: Product) {
-    if (p === Product.Water) {
-      return 100
-    }
-    return 120
-  }
-}
-export {
-  Product
-}
-
-
-class Stock {
-  stockMap: Map<Product, number>;
-  constructor(stockMap: Map<Product, number>) {
-    this.stockMap = stockMap;
-  }
-
-  decrement(p: Product) {
-    const number = this.stockMap.get(p)!;
-    if (number > 0) {
-      this.stockMap.set(p, number - 1)
-    } else {
-      throw new Error("out of stock")
-    }
-  }
+  Cola
 }
 
 export class VendingMachine {
@@ -59,49 +29,43 @@ export class VendingMachine {
     [Product.Water, 0],
     [Product.Cola, 0],
   ])
-
   putMoney(n: Money): void {
     if (n === 1 || n === 5 || n === 5000 || n === 10000) {
       throw new Error("not acceptable")
     }
     this.amount += n
   }
-
   getAmount(): number {
     return this.amount
   }
-
-  private stock = new Stock(this.stockMap);
-
   buy(p: Product): void {
-    const stock1 = this.stock
-    const price = Product.getPrice(p)
-    this.hasEnoughAmount(price);
-    this.decrement(p, stock1);
-    this.amount -= price
-  }
-
-  private decrement(p: Product, stock1: Stock) {
-    stock1.decrement(p)
-  }
-
-  private hasEnoughAmount(price: number) {
+    const stock = this.stockMap.get(p)!
+    let price = 0
+    if (p === Product.Water) {
+      price = 100
+    }
+    if (p === Product.Cola) {
+      price = 120
+    }
     if (this.amount < price) {
       throw new Error("amount not enough")
     }
+    if (stock > 0) {
+      this.amount -= price
+      this.stockMap.set(p, stock - 1)
+    } else {
+      throw new Error("out of stock")
+    }
   }
-
   getChange(): number {
     const change = this.amount
     this.amount = 0
     return change
   }
-
   addStock(p: Product, n: number): void {
     const stock = this.stockMap.get(p)! + n
     this.stockMap.set(p, stock)
   }
-
   getStocks(): Map<Product, number> {
     return this.stockMap
   }
