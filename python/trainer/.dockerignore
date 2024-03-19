@@ -1,0 +1,6 @@
+docker
+htmlcov
+.coverage
+.python-version
+docker-compose.yml
+Makefile
