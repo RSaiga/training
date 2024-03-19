@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  web-react:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    volumes:
+      - ./:/app
+    environment:
+      - HOST=0.0.0.0
+      - CHOKIDAR_USEPOLLING=true
+      - VITE_API_URL=http://host.docker.internal/api
+    tty: true
+    ports:
+      - "5173:5173"
+    command: sh -c "npm rebuild esbuild && yarn dev"
