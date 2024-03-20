@@ -11,4 +11,4 @@ destroy:
 destroy-volumes:
 	docker compose down --volumes --remove-orphans
 test:
-	docker compose exec web-react yarn test
+	docker compose run web-react yarn test
