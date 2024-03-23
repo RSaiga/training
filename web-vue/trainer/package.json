@@ -1,0 +1,32 @@
+{
+  "name": "trainer",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "test": "jest tests"
+  },
+  "dependencies": {
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.3",
+    "@babel/preset-env": "^7.24.3",
+    "@happy-dom/global-registrator": "^14.3.1",
+    "@testing-library/vue": "^8.0.3",
+    "@types/jest": "^29.5.12",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/test-utils": "^2.4.5",
+    "@vue/vue3-jest": "^29.2.6",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^24.0.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vue-tsc": "^2.0.6"
+  }
+}
